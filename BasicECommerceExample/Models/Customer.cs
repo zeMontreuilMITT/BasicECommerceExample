@@ -22,7 +22,16 @@
                 }
             }
         }
-
         public HashSet<CustomerAddress> CustomerAddresses { get; set; } = new HashSet<CustomerAddress>();
+
+        public Customer(string fullName)
+        {
+            FullName = fullName;
+        }
+
+        public Customer()
+        {
+
+        }
     }
 }
