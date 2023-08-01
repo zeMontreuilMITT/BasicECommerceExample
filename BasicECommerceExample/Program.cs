@@ -21,11 +21,6 @@ var app = builder.Build();
 
 app.MapGet("/customers/all", (ECommerceContext db) =>
 {
-    // show all customers, then show a list of addresses
-
-
-    // get all customers
-    // Select: get some customer property values and insert them into a new object (in this case, a new CustomerWithAddresses object
     HashSet<CustomerWithAddresses> CustomersWAddresses = db.Customers.Select(c => new CustomerWithAddresses {
             CustomerId = c.Id, 
             CustomerFullName = c.FullName, 
@@ -58,5 +53,3 @@ app.MapPost("/products/create", (ECommerceContext db, string name) => {
 });
 
 app.Run();
-
-// Customer = new Customer { Id = 2, Name = "test" }
