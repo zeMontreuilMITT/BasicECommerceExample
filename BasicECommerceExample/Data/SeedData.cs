@@ -36,7 +36,7 @@ namespace BasicECommerceExample.Data
                 db.SaveChanges();
             }
             
-            Order firstOrder = new Order { Address = addressOne, Customer = customerTwo, OrderStatus = OrderStatus.InCart };
+            Order firstOrder = new Order { Address = addressOne, Customer = customerTwo, OrderStatus = OrderStatus.Pending };
             Order secondOrder = new Order { Address = addressOne, Customer = customerTwo, OrderStatus = OrderStatus.Shipped };
 
             if (!db.Orders.Any())

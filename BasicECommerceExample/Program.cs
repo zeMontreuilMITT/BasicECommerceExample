@@ -58,4 +58,44 @@ app.MapPost("/products/create", (ECommerceContext db, string name) => {
  
 });
 
+app.MapPost("/cart/{orderNumber}/add", (ECommerceContext db, Guid itemId, int quantity, Guid orderNumber) =>
+{
+    try
+    {
+        if (quantity < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantity));
+        }
+
+        // comparing Guid 
+        Order order = db.Orders.Include(o => o.OrderedProducts).First(o => o.Id.CompareTo(orderNumber) == 0);
+
+        if(!order.OrderStatus.Equals(OrderStatus.Pending))
+        {
+            throw new InvalidOperationException("Cannot add product to Order that is not Pending.");
+        }
+
+        Product product = db.Products.First(p => p.Id.CompareTo(itemId) == 0);
+
+        // if order already contains product, then increment product quantity instead
+        OrderProduct? preexistingOrderProduct = order.OrderedProducts.FirstOrDefault(op => op.ProductId.CompareTo(product.Id) == 0);
+
+        if(preexistingOrderProduct != null)
+        {
+            preexistingOrderProduct.Quantity += quantity;
+        }
+        else
+        {
+            order.OrderedProducts.Add(new OrderProduct { Product = product, Quantity = quantity });
+        }
+
+        db.SaveChanges();
+        return Results.Ok(order);
+
+    } catch (InvalidOperationException ex)
+    {
+        return Results.NotFound(ex.Message);
+    }
+});
+
 app.Run();
