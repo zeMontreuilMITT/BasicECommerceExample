@@ -13,10 +13,19 @@ namespace BasicECommerceExample.Data
                 .WithMany(a => a.PrimaryCustomers)
                 .HasForeignKey(c => c.PrimaryAddressId);
 
+            // configuring modelBuilder using FLUENT API
+
             modelBuilder.Entity<Customer>()
                 .HasOne(c => c.SecondaryAddress)
                 .WithMany(a => a.SecondaryCustomers)
                 .HasForeignKey(c => c.SecondaryAddressId);
+
+            modelBuilder.Entity<Customer>().HasKey(c => c.AccountNumber);
+
+            modelBuilder.Entity<Order>().HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CustomerAccountNumber)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
 
