@@ -9,20 +9,9 @@ namespace BasicECommerceExample.Data
         {
             ECommerceContext db = new ECommerceContext(serviceProvider.GetRequiredService<DbContextOptions<ECommerceContext>>());
 
-            // CUSTOMER
-            Customer customerOne = new Customer("First Test Customer");
-            Customer customerTwo = new Customer("Second Test Customer");
-
             db.Database.EnsureDeleted();
             db.Database.Migrate();
 
-
-            if (!db.Customers.Any())
-            {
-                db.Add(customerOne);
-                db.Add(customerTwo);
-                db.SaveChanges();
-            }
 
             // ADDRESS
             Address addressOne = new Address { StreetAndNumber = "444 Fake st." };
@@ -33,7 +22,41 @@ namespace BasicECommerceExample.Data
                 db.SaveChanges();
             }
 
+            // CUSTOMER
+            Customer customerOne = new Customer("First Test Customer");
+            Customer customerTwo = new Customer("Second Test Customer");
 
+            customerOne.PrimaryAddress = addressOne;
+            customerTwo.PrimaryAddress = addressOne;
+
+            if (!db.Customers.Any())
+            {
+                db.Add(customerOne);
+                db.Add(customerTwo);
+                db.SaveChanges();
+            }
+            
+            Order firstOrder = new Order { Address = addressOne, Customer = customerTwo, OrderStatus = OrderStatus.InCart };
+            Order secondOrder = new Order { Address = addressOne, Customer = customerTwo, OrderStatus = OrderStatus.Shipped };
+
+            if (!db.Orders.Any())
+            {
+                db.Add(firstOrder);
+                db.Add(secondOrder);
+                db.SaveChanges();
+            }
+
+            Product firstProduct = new Product { Name = "Furby" };
+            Product secondProduct = new Product { Name = "Pet Rock" };
+            Product thirdProduct = new Product { Name = "Tamagotchi" };
+
+            if (!db.Products.Any())
+            {
+                db.Add(firstProduct);
+                db.Add(secondProduct);
+                db.Add(thirdProduct);
+                db.SaveChanges();
+            }
         }
     }
 }

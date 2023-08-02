@@ -18,6 +18,13 @@ builder.Services.Configure<JsonOptions>(options => {
 
 var app = builder.Build();
 
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    IServiceProvider serviceProvider = scope.ServiceProvider;
+
+    await SeedData.Initialize(serviceProvider);
+}
+
 app.MapGet("/customers/all", (ECommerceContext db) =>
 {
     return Results.Ok(db.Customers
