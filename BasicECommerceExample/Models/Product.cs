@@ -17,6 +17,6 @@
                 }
             }
         }
-        public HashSet<Order> Orders { get; set; } = new HashSet<Order>();
+        public HashSet<OrderProduct> OrderedProducts { get; set; } = new HashSet<OrderProduct>();
     }
 }

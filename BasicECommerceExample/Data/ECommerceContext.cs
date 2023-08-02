@@ -26,6 +26,9 @@ namespace BasicECommerceExample.Data
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerAccountNumber)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // composite key for middle table
+            modelBuilder.Entity<OrderProduct>().HasKey(op => new { op.OrderId, op.ProductId });
         }
 
 
