@@ -1,6 +1,5 @@
 using BasicECommerceExample.Data;
 using BasicECommerceExample.Models;
-using BasicECommerceExample.Models.ResponseModel;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -21,15 +20,13 @@ var app = builder.Build();
 
 app.MapGet("/customers/all", (ECommerceContext db) =>
 {
-    /* TODO -- Fix Customers with Addresses endpoint
-    HashSet<CustomerWithAddresses> CustomersWAddresses = db.Customers.Select(c => new CustomerWithAddresses {
-            CustomerId = c.Id, 
-            CustomerFullName = c.FullName, 
-            AddressList = c.CustomerAddresses.Select(ca => ca.Address).ToHashSet()
-        }).ToHashSet();
+    return Results.Ok(db.Customers
+        .Include(c => c.PrimaryAddress)
+        .Include(c => c.SecondaryAddress)
+        .ToHashSet());
 
-    return Results.Ok(CustomersWAddresses);
-    */
+    // .Include refers to initially queried table
+    // .ThenInclude refers to the most recently queried table on an Include series
 });
 
 app.MapPost("/products/create", (ECommerceContext db, string name) => {

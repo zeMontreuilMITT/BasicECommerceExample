@@ -2,7 +2,7 @@
 {
     public class Customer
     {
-        public Guid Id { get; set; }
+        public Guid AccountNumber { get; set; }
         private string _fullName;
         public string FullName
         {
@@ -28,6 +28,8 @@
 
         public Guid? SecondaryAddressId { get; set; }
         public Address? SecondaryAddress { get; set; }
+
+        public HashSet<Order> Orders { get; set; } = new HashSet<Order>();
 
         public Customer(string fullName)
         {
