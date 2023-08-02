@@ -21,6 +21,7 @@ var app = builder.Build();
 
 app.MapGet("/customers/all", (ECommerceContext db) =>
 {
+    /* TODO -- Fix Customers with Addresses endpoint
     HashSet<CustomerWithAddresses> CustomersWAddresses = db.Customers.Select(c => new CustomerWithAddresses {
             CustomerId = c.Id, 
             CustomerFullName = c.FullName, 
@@ -28,6 +29,7 @@ app.MapGet("/customers/all", (ECommerceContext db) =>
         }).ToHashSet();
 
     return Results.Ok(CustomersWAddresses);
+    */
 });
 
 app.MapPost("/products/create", (ECommerceContext db, string name) => {

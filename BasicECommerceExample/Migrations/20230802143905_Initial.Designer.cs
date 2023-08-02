@@ -4,6 +4,7 @@ using BasicECommerceExample.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasicECommerceExample.Migrations
 {
     [DbContext(typeof(ECommerceContext))]
-    partial class ECommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20230802143905_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,25 +50,42 @@ namespace BasicECommerceExample.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PrimaryAddressId")
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("BasicECommerceExample.Models.CustomerAddress", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("SecondaryAddressId")
+                    b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("PrimaryAddress")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PrimaryAddressId");
+                    b.HasIndex("AddressId");
 
-                    b.HasIndex("SecondaryAddressId");
+                    b.HasIndex("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("CustomersAddresses");
                 });
 
             modelBuilder.Entity("BasicECommerceExample.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerAddressId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ProductId")
@@ -75,6 +95,8 @@ namespace BasicECommerceExample.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerAddressId");
 
                     b.HasIndex("ProductId");
 
@@ -96,39 +118,47 @@ namespace BasicECommerceExample.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("BasicECommerceExample.Models.Customer", b =>
+            modelBuilder.Entity("BasicECommerceExample.Models.CustomerAddress", b =>
                 {
-                    b.HasOne("BasicECommerceExample.Models.Address", "PrimaryAddress")
-                        .WithMany("PrimaryCustomers")
-                        .HasForeignKey("PrimaryAddressId")
+                    b.HasOne("BasicECommerceExample.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BasicECommerceExample.Models.Address", "SecondaryAddress")
-                        .WithMany("SecondaryCustomers")
-                        .HasForeignKey("SecondaryAddressId");
+                    b.HasOne("BasicECommerceExample.Models.Customer", "Customer")
+                        .WithMany("CustomerAddresses")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("PrimaryAddress");
+                    b.Navigation("Address");
 
-                    b.Navigation("SecondaryAddress");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("BasicECommerceExample.Models.Order", b =>
                 {
+                    b.HasOne("BasicECommerceExample.Models.CustomerAddress", "CustomerAddress")
+                        .WithMany()
+                        .HasForeignKey("CustomerAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BasicECommerceExample.Models.Product", "Product")
                         .WithMany("Orders")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("CustomerAddress");
+
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("BasicECommerceExample.Models.Address", b =>
+            modelBuilder.Entity("BasicECommerceExample.Models.Customer", b =>
                 {
-                    b.Navigation("PrimaryCustomers");
-
-                    b.Navigation("SecondaryCustomers");
+                    b.Navigation("CustomerAddresses");
                 });
 
             modelBuilder.Entity("BasicECommerceExample.Models.Product", b =>

@@ -22,7 +22,12 @@
                 }
             }
         }
-        public HashSet<CustomerAddress> CustomerAddresses { get; set; } = new HashSet<CustomerAddress>();
+
+        public Guid PrimaryAddressId { get; set; }
+        public Address PrimaryAddress { get; set; }
+
+        public Guid? SecondaryAddressId { get; set; }
+        public Address? SecondaryAddress { get; set; }
 
         public Customer(string fullName)
         {

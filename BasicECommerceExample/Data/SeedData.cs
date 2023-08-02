@@ -13,6 +13,10 @@ namespace BasicECommerceExample.Data
             Customer customerOne = new Customer("First Test Customer");
             Customer customerTwo = new Customer("Second Test Customer");
 
+            db.Database.EnsureDeleted();
+            db.Database.Migrate();
+
+
             if (!db.Customers.Any())
             {
                 db.Add(customerOne);
@@ -29,14 +33,6 @@ namespace BasicECommerceExample.Data
                 db.SaveChanges();
             }
 
-            // CA
-            CustomerAddress oneAndOne = new CustomerAddress { AddressId = addressOne.Id, CustomerId = customerOne.Id };
-
-            if (!db.CustomersAddresses.Any())
-            {
-                db.Add(oneAndOne);
-                db.SaveChanges();
-            }
 
         }
     }

@@ -18,9 +18,6 @@
             }
         }
 
-        public CustomerAddress CustomerAddress { get; set; }
-        public Guid CustomerAddressId { get; set; }
-
         public Product Product { get; set; }
         public Guid ProductId {  get; set; }
     }
